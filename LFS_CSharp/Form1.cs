@@ -18,10 +18,9 @@ namespace LFS_CSharp
         public vJoy joystick;
         public vJoy.JoystickState iReport;
         private Thread outgaugeThread;
-        private Thread outsimThread;
+        
         private Graphics graphics;
         private Rectangle accelPoint;
-        private vJoyForm VJoyForm;
         private double[,] ValsArray = new double[4,500];
         private Mutex mutex;
         private double speed;
@@ -51,8 +50,6 @@ namespace LFS_CSharp
             {
                 this.outgaugeThread = new Thread(new ThreadStart(CallOutgaugeThread));
                 this.outgaugeThread.Start();
-                this.outsimThread = new Thread(new ThreadStart(CallOutsimThread));
-                this.outsimThread.Start();
             }
         }
 
@@ -224,17 +221,6 @@ namespace LFS_CSharp
 
         }
 
-        private void CallOutsimThread()
-        {
-            Console.WriteLine("Outsim Thread Started!");
-            OutSim outsim = new OutSim();
-            outsim.PacketReceived += (sender, e) =>
-            {
-                ShowOutsimValues(e.Accel.X, e.Accel.Y, e.Accel.Z);
-            };
-            outsim.Connect("127.0.0.1", 29966);
-        }
-
         delegate void ShowValuesDelegate(double RPM, 
             double Throttle, 
             double Brakes,
@@ -279,7 +265,6 @@ namespace LFS_CSharp
 
         private void updateChart()
         {
-
             speed_chart.Series["Speed"].Points.Clear();
             rpm_chart.Series["RPM"].Points.Clear();
             accel_chart.Series["Accel"].Points.Clear();
@@ -293,33 +278,10 @@ namespace LFS_CSharp
             }
         }
 
-        delegate void ShowOutsimValuesDelegate(double accX, double accY, double accZ);
-        private void ShowOutsimValues(double accX, double accY, double accZ)
-        {
-            try
-            {
-                if (this.InvokeRequired)
-                {
-                    this.Invoke(new ShowOutsimValuesDelegate(ShowOutsimValues), new object[] { accX, accY, accZ });
-                }
-                else
-                {
-                    
-                }
-            }
-            catch(ObjectDisposedException ex)
-            {
-                if (outsimThread.IsAlive)
-                    outsimThread.Abort();
-            }
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if(outgaugeThread != null && outgaugeThread.IsAlive)
                 outgaugeThread.Abort();
-            if(outsimThread != null && outsimThread.IsAlive)
-                outsimThread.Abort();
         }
 
         private void btn_openVJoyControl_Click(object sender, EventArgs e)
@@ -352,6 +314,10 @@ namespace LFS_CSharp
         {
             lp.setpoint = (double)num_accel_consigne.Value;
         }
-        
+
+        private void btn_track_viewer_Click(object sender, EventArgs e)
+        {
+            TrackViewer trackViewer = TrackViewer.Create();
+        }
     }
 }

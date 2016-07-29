@@ -72,6 +72,7 @@
             this.rpm_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.accel_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.brake_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.btn_track_viewer = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.speed_chart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_kp_accel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_ki_accel)).BeginInit();
@@ -483,11 +484,22 @@
             this.brake_chart.TabIndex = 23;
             this.brake_chart.Text = "brake_chart";
             // 
+            // btn_track_viewer
+            // 
+            this.btn_track_viewer.Location = new System.Drawing.Point(18, 191);
+            this.btn_track_viewer.Name = "btn_track_viewer";
+            this.btn_track_viewer.Size = new System.Drawing.Size(75, 23);
+            this.btn_track_viewer.TabIndex = 24;
+            this.btn_track_viewer.Text = "Open Track Viewer";
+            this.btn_track_viewer.UseVisualStyleBackColor = true;
+            this.btn_track_viewer.Click += new System.EventHandler(this.btn_track_viewer_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(956, 633);
+            this.Controls.Add(this.btn_track_viewer);
             this.Controls.Add(this.brake_chart);
             this.Controls.Add(this.accel_chart);
             this.Controls.Add(this.rpm_chart);
@@ -562,6 +574,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart rpm_chart;
         private System.Windows.Forms.DataVisualization.Charting.Chart accel_chart;
         private System.Windows.Forms.DataVisualization.Charting.Chart brake_chart;
+        private System.Windows.Forms.Button btn_track_viewer;
     }
 }
 
