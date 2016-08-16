@@ -327,8 +327,8 @@ namespace LFS_CSharp
 
         private void btn_track_viewer_Click(object sender, EventArgs e)
         {
-            TrackViewer trackViewer = TrackViewer.Create();
-            //TrackGL gl = new TrackGL(1024, 768);
+            //TrackViewer trackViewer = TrackViewer.Create();
+            TrackGL gl = new TrackGL(1024, 768);
         }
     }
 }
