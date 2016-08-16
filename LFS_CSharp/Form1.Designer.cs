@@ -186,7 +186,6 @@
             this.speed_chart.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.speed_chart.Legends.Add(legend1);
-<<<<<<< HEAD
             this.speed_chart.Location = new System.Drawing.Point(297, 12);
             this.speed_chart.Name = "speed_chart";
             series1.ChartArea = "ChartArea1";
@@ -195,16 +194,6 @@
             series1.Name = "Speed";
             this.speed_chart.Series.Add(series1);
             this.speed_chart.Size = new System.Drawing.Size(647, 105);
-=======
-            this.speed_chart.Location = new System.Drawing.Point(279, 12);
-            this.speed_chart.Name = "speed_chart";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Legend = "Legend1";
-            series1.Name = "Speed";
-            this.speed_chart.Series.Add(series1);
-            this.speed_chart.Size = new System.Drawing.Size(665, 119);
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.speed_chart.TabIndex = 10;
             this.speed_chart.Text = "speed_chart";
             // 
@@ -321,11 +310,7 @@
             this.gpb_acceleration_looppoint.Controls.Add(this.label5);
             this.gpb_acceleration_looppoint.Controls.Add(this.label4);
             this.gpb_acceleration_looppoint.Controls.Add(this.num_kd_accel);
-<<<<<<< HEAD
             this.gpb_acceleration_looppoint.Location = new System.Drawing.Point(1, 220);
-=======
-            this.gpb_acceleration_looppoint.Location = new System.Drawing.Point(12, 524);
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.gpb_acceleration_looppoint.Name = "gpb_acceleration_looppoint";
             this.gpb_acceleration_looppoint.Size = new System.Drawing.Size(295, 97);
             this.gpb_acceleration_looppoint.TabIndex = 19;
@@ -342,11 +327,7 @@
             this.gpb_freinage_looppoint.Controls.Add(this.label9);
             this.gpb_freinage_looppoint.Controls.Add(this.label10);
             this.gpb_freinage_looppoint.Controls.Add(this.num_kd_frein);
-<<<<<<< HEAD
             this.gpb_freinage_looppoint.Location = new System.Drawing.Point(1, 323);
-=======
-            this.gpb_freinage_looppoint.Location = new System.Drawing.Point(313, 524);
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.gpb_freinage_looppoint.Name = "gpb_freinage_looppoint";
             this.gpb_freinage_looppoint.Size = new System.Drawing.Size(295, 97);
             this.gpb_freinage_looppoint.TabIndex = 20;
@@ -458,7 +439,6 @@
             this.rpm_chart.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.rpm_chart.Legends.Add(legend2);
-<<<<<<< HEAD
             this.rpm_chart.Location = new System.Drawing.Point(297, 123);
             this.rpm_chart.Name = "rpm_chart";
             series2.ChartArea = "ChartArea1";
@@ -467,16 +447,6 @@
             series2.Name = "RPM";
             this.rpm_chart.Series.Add(series2);
             this.rpm_chart.Size = new System.Drawing.Size(647, 108);
-=======
-            this.rpm_chart.Location = new System.Drawing.Point(279, 137);
-            this.rpm_chart.Name = "rpm_chart";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Legend = "Legend1";
-            series2.Name = "RPM";
-            this.rpm_chart.Series.Add(series2);
-            this.rpm_chart.Size = new System.Drawing.Size(665, 119);
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.rpm_chart.TabIndex = 21;
             this.rpm_chart.Text = "rpm_chart";
             // 
@@ -486,7 +456,6 @@
             this.accel_chart.ChartAreas.Add(chartArea3);
             legend3.Name = "Legend1";
             this.accel_chart.Legends.Add(legend3);
-<<<<<<< HEAD
             this.accel_chart.Location = new System.Drawing.Point(297, 237);
             this.accel_chart.Name = "accel_chart";
             series3.ChartArea = "ChartArea1";
@@ -495,16 +464,6 @@
             series3.Name = "Accel";
             this.accel_chart.Series.Add(series3);
             this.accel_chart.Size = new System.Drawing.Size(647, 108);
-=======
-            this.accel_chart.Location = new System.Drawing.Point(279, 262);
-            this.accel_chart.Name = "accel_chart";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Legend = "Legend1";
-            series3.Name = "Accel";
-            this.accel_chart.Series.Add(series3);
-            this.accel_chart.Size = new System.Drawing.Size(665, 119);
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.accel_chart.TabIndex = 22;
             this.accel_chart.Text = "accel_chart";
             // 
@@ -514,7 +473,6 @@
             this.brake_chart.ChartAreas.Add(chartArea4);
             legend4.Name = "Legend1";
             this.brake_chart.Legends.Add(legend4);
-<<<<<<< HEAD
             this.brake_chart.Location = new System.Drawing.Point(297, 346);
             this.brake_chart.Name = "brake_chart";
             series4.ChartArea = "ChartArea1";
@@ -523,16 +481,6 @@
             series4.Name = "Brake";
             this.brake_chart.Series.Add(series4);
             this.brake_chart.Size = new System.Drawing.Size(647, 108);
-=======
-            this.brake_chart.Location = new System.Drawing.Point(279, 387);
-            this.brake_chart.Name = "brake_chart";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series4.Legend = "Legend1";
-            series4.Name = "Brake";
-            this.brake_chart.Series.Add(series4);
-            this.brake_chart.Size = new System.Drawing.Size(665, 119);
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.brake_chart.TabIndex = 23;
             this.brake_chart.Text = "brake_chart";
             // 
@@ -550,11 +498,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-<<<<<<< HEAD
             this.ClientSize = new System.Drawing.Size(956, 470);
-=======
-            this.ClientSize = new System.Drawing.Size(956, 633);
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.Controls.Add(this.btn_track_viewer);
             this.Controls.Add(this.brake_chart);
             this.Controls.Add(this.accel_chart);

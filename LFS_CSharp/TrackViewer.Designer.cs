@@ -60,10 +60,7 @@
             this.Controls.Add(this.btn_open_track);
             this.Name = "TrackViewer";
             this.Text = "TrackViewer";
-<<<<<<< HEAD
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrackViewer_FormClosing);
-=======
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackViewer_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

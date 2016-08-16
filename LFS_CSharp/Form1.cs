@@ -1,20 +1,16 @@
 ﻿using InSimDotNet.Out;
+using LFS_External.InSim;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using vJoyInterfaceWrap;
-<<<<<<< HEAD
-using LFS_External.InSim;
-using LFS_External;
-using System.Diagnostics;
-=======
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
 
 namespace LFS_CSharp
 {
@@ -23,22 +19,12 @@ namespace LFS_CSharp
 
         public vJoy joystick;
         public vJoy.JoystickState iReport;
-<<<<<<< HEAD
         //private Thread outgaugeThread;
         private OutgaugeThread _outgaugeThread;
         private static Form1 _form;
         public InSimInterface InSim;
-        private double[,] ValsArray = new double[4,250];
+        private double[,] ValsArray = new double[4, 250];
         public static Mutex mutexOutgauge;
-=======
-        private Thread outgaugeThread;
-        
-        private Graphics graphics;
-        private Rectangle accelPoint;
-        private double[,] ValsArray = new double[4,500];
-        private Mutex mutex;
-        private double speed;
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
         private int gear;
 
         private LP lp;
@@ -53,48 +39,30 @@ namespace LFS_CSharp
         [STAThread]
         static void Main()
         {
-<<<<<<< HEAD
             _form = new Form1();
             Application.EnableVisualStyles();
             Application.Run(_form);
-=======
-            Application.EnableVisualStyles();
-            Application.Run(new Form1());
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
         }
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
-<<<<<<< HEAD
             if (Form1.mutexOutgauge == null)
                 Form1.mutexOutgauge = new Mutex();
             //if (this.outgaugeThread == null)
-            if(_outgaugeThread == null)
+            if (_outgaugeThread == null)
             {
                 this._outgaugeThread = new OutgaugeThread();
                 this._outgaugeThread.Start();
-=======
-            if (this.mutex == null)
-                this.mutex = new Mutex();
-            if (this.outgaugeThread == null)
-            {
-                this.outgaugeThread = new Thread(new ThreadStart(CallOutgaugeThread));
-                this.outgaugeThread.Start();
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             }
         }
 
         private void CallVJoyFeeder()
         {
-            
+
             // Create one joystick object and a position structure.
             joystick = new vJoy();
             iReport = new vJoy.JoystickState();
-<<<<<<< HEAD
             if (Form1.mutexOutgauge == null) Form1.mutexOutgauge = new Mutex();
-=======
-            if (this.mutex == null) this.mutex = new Mutex();
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
             lp = new LFS_CSharp.LP(10, 5, 5);
             lp.computeConstants();
             uint id = 1;
@@ -198,7 +166,7 @@ namespace LFS_CSharp
                 {
                     lp.setpoint = -100;
                 }
-                else if(gear == 0)
+                else if (gear == 0)
                 {
                     lp.setpoint = 10;
                 }
@@ -207,19 +175,11 @@ namespace LFS_CSharp
                     lp.setpoint = (double)num_accel_consigne.Value;
                 }
                 lp.direct = false;
-<<<<<<< HEAD
                 //this.mutex.WaitOne();
                 lp.execute();
                 // Set position of 4 axes
                 res = joystick.SetAxis((int)adapteAxis(lp._out, maxval), id, HID_USAGES.HID_USAGE_X);
                 //this.mutex.ReleaseMutex();
-=======
-                this.mutex.WaitOne();
-                lp.execute();
-                // Set position of 4 axes
-                res = joystick.SetAxis((int)adapteAxis(lp._out, maxval), id, HID_USAGES.HID_USAGE_X);
-                this.mutex.ReleaseMutex();
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
 
                 System.Threading.Thread.Sleep(20);
                 X += 150; if (X > maxval) X = 0;
@@ -232,77 +192,34 @@ namespace LFS_CSharp
 
         private double adapteAxis(double rawValue, long maxval)
         {
-            return (((maxval - maxval / 2)/100)*rawValue)+maxval/2;
+            return (((maxval - maxval / 2) / 100) * rawValue) + maxval / 2;
         }
 
-<<<<<<< HEAD
         #region Update View
-=======
-        private void CallOutgaugeThread()
-        {
-            Console.WriteLine("Thread Started!");
-            OutGauge outgauge = new OutGauge();
-            outgauge.PacketReceived += (sender, e) =>
-            {
-                this.mutex.WaitOne();
-                this.speed = e.Speed*3.6;
-                if(lp != null)
-                    lp.vitesse = this.speed;
-                this.gear = e.Gear;
-                this.mutex.ReleaseMutex();
-                ValsArray[0, ValsArray.GetLength(1) - 1] = Math.Truncate(e.Speed * 36) / 10;
-                ValsArray[1, ValsArray.GetLength(1) - 1] = e.RPM;
-                ValsArray[2, ValsArray.GetLength(1) - 1] = e.Throttle;
-                ValsArray[3, ValsArray.GetLength(1) - 1] = e.Brake;
-                Array.Copy(ValsArray, 1, ValsArray, 0, ValsArray.Length - 1);
-                
-                ShowValues(e.RPM, 
-                    e.Throttle*100, 
-                    e.Brake*100,
-                    e.Clutch*100, 
-                    e.Speed*3.6,
-                    e.Time);
-            };
-            outgauge.Connect("127.0.0.1", 29967);
-
-        }
-
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
-        delegate void ShowValuesDelegate(double RPM, 
-            double Throttle, 
+        delegate void ShowValuesDelegate(double RPM,
+            double Throttle,
             double Brakes,
             double Clutch,
             double Speed,
             TimeSpan Time);
-<<<<<<< HEAD
-        public static void ShowValues(double RPM, 
-=======
-
-        private void ShowValues(double RPM, 
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
-            double Throttle, 
-            double Brakes, 
+        public static void ShowValues(double RPM,
+            double Throttle,
+            double Brakes,
             double Clutch,
             double Speed,
             TimeSpan Time)
         {
             try
             {
-<<<<<<< HEAD
                 if (!_form.IsDisposed)
                 {
                     if (_form.InvokeRequired)
                         _form.Invoke(new ShowValuesDelegate(ShowValues), new object[] { RPM,
-=======
-                if (this.InvokeRequired)
-                    this.Invoke(new ShowValuesDelegate(ShowValues), new object[] { RPM,
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
                     Throttle,
                     Brakes,
                     Clutch,
                     Speed,
                     Time});
-<<<<<<< HEAD
                     else
                     {
                         _form.pgb_throttle.Value = (int)Throttle;
@@ -312,23 +229,10 @@ namespace LFS_CSharp
                         _form.lbl_speed.Text = (Math.Truncate(Speed * 10) / 10).ToString();
                         _form.lbl_time.Text = Time.ToString();
                     }
-=======
-                else
-                {
-                    pgb_throttle.Value = (int)Throttle;
-                    pgb_brakes.Value = (int)Brakes;
-                    pgb_clutch.Value = (int)Clutch;
-                    lbl_RPM.Text = (Math.Truncate(RPM * 100) / 100).ToString();
-                    lbl_speed.Text = (Math.Truncate(Speed * 10) / 10).ToString();
-                    lbl_time.Text = Time.ToString();
-                    if(speed_chart != null && rpm_chart != null && accel_chart != null && brake_chart != null)
-                        updateChart();
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
                 }
             }
-            catch(ObjectDisposedException ex)
+            catch (ObjectDisposedException ex)
             {
-<<<<<<< HEAD
                 Trace.WriteLine(ex.Message);
             }
         }
@@ -360,7 +264,7 @@ namespace LFS_CSharp
                     }
                 }
             }
-            catch(ObjectDisposedException ex)
+            catch (ObjectDisposedException ex)
             {
                 Trace.WriteLine(ex.Message);
             }
@@ -370,13 +274,10 @@ namespace LFS_CSharp
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(_outgaugeThread != null)
+            if (_outgaugeThread != null)
                 _outgaugeThread.Abort();
-=======
-                if (outgaugeThread.IsAlive)
-                    outgaugeThread.Abort();
-            }
         }
+    
 
         private void updateChart()
         {
@@ -391,13 +292,6 @@ namespace LFS_CSharp
                 accel_chart.Series["Accel"].Points.AddY(ValsArray[2, i]);
                 brake_chart.Series["Brake"].Points.AddY(ValsArray[3, i]);
             }
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if(outgaugeThread != null && outgaugeThread.IsAlive)
-                outgaugeThread.Abort();
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
         }
 
         private void btn_openVJoyControl_Click(object sender, EventArgs e)
@@ -416,13 +310,13 @@ namespace LFS_CSharp
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
-            lp.ki = (double)num_ki_accel.Value/1000;
+            lp.ki = (double)num_ki_accel.Value / 1000;
             lp.computeConstants();
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
-            lp.kd = (double)num_kd_accel.Value/10;
+            lp.kd = (double)num_kd_accel.Value / 10;
             lp.computeConstants();
         }
 
@@ -434,10 +328,8 @@ namespace LFS_CSharp
         private void btn_track_viewer_Click(object sender, EventArgs e)
         {
             TrackViewer trackViewer = TrackViewer.Create();
-<<<<<<< HEAD
             //TrackGL gl = new TrackGL(1024, 768);
-=======
->>>>>>> 74f6ad01297260e38313f2d9b746c89faa42e76b
         }
     }
 }
+
