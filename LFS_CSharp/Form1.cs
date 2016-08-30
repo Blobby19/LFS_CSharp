@@ -21,6 +21,7 @@ namespace LFS_CSharp
         public vJoy.JoystickState iReport;
         //private Thread outgaugeThread;
         private OutgaugeThread _outgaugeThread;
+        private static JoyController joyController;
         private static Form1 _form;
         public InSimInterface InSim;
         private double[,] ValsArray = new double[4, 250];
@@ -40,6 +41,7 @@ namespace LFS_CSharp
         static void Main()
         {
             _form = new Form1();
+            joyController = JoyController.Create();
             Application.EnableVisualStyles();
             Application.Run(_form);
         }
@@ -228,6 +230,7 @@ namespace LFS_CSharp
                         _form.lbl_RPM.Text = (Math.Truncate(RPM * 100) / 100).ToString();
                         _form.lbl_speed.Text = (Math.Truncate(Speed * 10) / 10).ToString();
                         _form.lbl_time.Text = Time.ToString();
+                        //joyController.retrieveValues(RPM, Throttle, Brakes, Clutch, Speed, Time);
                     }
                 }
             }
@@ -328,7 +331,8 @@ namespace LFS_CSharp
         private void btn_track_viewer_Click(object sender, EventArgs e)
         {
             //TrackViewer trackViewer = TrackViewer.Create();
-            TrackGL gl = new TrackGL(1024, 768);
+            TrackGL gl = new TrackGL(512, 512);
+            gl.Run();
         }
     }
 }

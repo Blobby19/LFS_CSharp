@@ -560,7 +560,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown num_kd_accel;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown num_accel_consigne;
         private System.Windows.Forms.GroupBox gpb_acceleration_looppoint;
         private System.Windows.Forms.GroupBox gpb_freinage_looppoint;
         private System.Windows.Forms.NumericUpDown num_kp_frein;
@@ -575,6 +574,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart accel_chart;
         private System.Windows.Forms.DataVisualization.Charting.Chart brake_chart;
         private System.Windows.Forms.Button btn_track_viewer;
+        public System.Windows.Forms.NumericUpDown num_accel_consigne;
     }
 }
 

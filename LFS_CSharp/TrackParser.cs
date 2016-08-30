@@ -17,7 +17,7 @@ namespace LFS_CSharp
             this._shortName = shortName;
         }
 
-        public PTH ParseTrack()
+        public PTH ParsePTHTrack()
         {
             FileStream reader = new FileStream("H:\\LFS\\data\\smx\\"+ this._shortName +".pth", FileMode.Open, FileAccess.Read);
             byte[] data;

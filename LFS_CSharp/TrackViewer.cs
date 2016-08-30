@@ -51,8 +51,8 @@ namespace LFS_CSharp
 
         private void btn_open_track_Click(object sender, EventArgs e)
         {
-            TrackParser trackParser = new TrackParser("FE6");
-            if((pth = trackParser.ParseTrack()) != null)
+            TrackParser trackParser = new TrackParser("BL2");
+            if((pth = trackParser.ParsePTHTrack()) != null)
             {
                 drawTrack(pth);
             }
