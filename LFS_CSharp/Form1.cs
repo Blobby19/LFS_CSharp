@@ -22,16 +22,14 @@ namespace LFS_CSharp
         public vJoy.JoystickState iReport;
         //private Thread outgaugeThread;
         private OutgaugeThread _outgaugeThread;
+        private Form1Receiver formReceiver;
         private static JoyController joyController;
         private static Form1 _form;
         public InSimInterface InSim;
         private double[,] ValsArray = new double[4, 250];
         public static Mutex mutexOutgauge;
-        private int gear;
 
         private LP lp;
-
-        private DateTime dt = new DateTime();
 
         public Form1()
         {
@@ -56,9 +54,9 @@ namespace LFS_CSharp
             {
                 this._outgaugeThread = new OutgaugeThread();
                 this._outgaugeThread.Start();
+                formReceiver = new Form1Receiver(this._outgaugeThread);
             }
         }
-
         
 
         #region Update View

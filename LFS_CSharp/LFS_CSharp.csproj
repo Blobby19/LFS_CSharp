@@ -79,6 +79,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Form1Receiver.cs" />
+    <Compile Include="OutGaugeObserver.cs" />
+    <Compile Include="OutSimObserver.cs" />
+    <Compile Include="OutSimThread.cs" />
+    <Compile Include="TrackViewerReceiver.cs" />
     <Compile Include="track\Cube.cs" />
     <Compile Include="JoyController.cs" />
     <Compile Include="OutgaugeThread.cs" />

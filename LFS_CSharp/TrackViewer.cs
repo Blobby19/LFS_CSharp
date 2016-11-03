@@ -21,10 +21,13 @@ namespace LFS_CSharp
         private Graphics g;
         private PointF[] posCar = new PointF[20];
         private int height;
-        OutSim outsim;
+        //OutSim outsim;
+        private OutSimThread _outsimThread;
+        private TrackViewerReceiver trackViewerReceiver;
+        public static TrackViewer _trackViewer;
         private PointF lastPosition;
         private int width;
-        private Thread outsimThread;
+        //private Thread outsimThread;
         private PTH pth;
         private Pen penLimit;
         private Pen penRoad;
@@ -37,11 +40,11 @@ namespace LFS_CSharp
 
         public static TrackViewer Create()
         {
-            TrackViewer form = new TrackViewer();
+            _trackViewer = new TrackViewer();
             Thread thread = new Thread(Main2);
             thread.SetApartmentState(ApartmentState.STA);
-            thread.Start(form);
-            return form;
+            thread.Start(_trackViewer);
+            return _trackViewer;
         }
 
         public TrackViewer()
@@ -94,8 +97,11 @@ namespace LFS_CSharp
                 if (i == points.Length - 2) g.DrawLine(Pens.Red, points[i + 1], points[0]);
                 //g.DrawLine(Pens.Green, points[i - 1].X, points[i - 1].Y, points[i - 1].X + pointsDir[i - 1].X * 20, points[i - 1].Y + pointsDir[i - 1].Y * 20);
             }
-            this.outsimThread = new Thread(new ThreadStart(CallOutsimThread));
-            this.outsimThread.Start();
+            this._outsimThread = new OutSimThread();
+            this._outsimThread.Start();
+            trackViewerReceiver = new TrackViewerReceiver(this._outsimThread);
+            //this.outsimThread = new Thread(new ThreadStart(CallOutsimThread));
+            //this.outsimThread.Start();
         }
         
         private PointF computeDriveLeftPoint(PointF center, float limitLeft, PointF dir)
@@ -134,15 +140,15 @@ namespace LFS_CSharp
             try
             {
                 Console.WriteLine("Outsim Thread Started!");
-                outsim = new OutSim();
-                outsim.PacketReceived += (sender, e) =>
+                //outsim = new OutSim();
+                /*outsim.PacketReceived += (sender, e) =>
                 {
                     posCar[posCar.Length - 1] = new PointF(convertToFitPictureBox(width, (int)e.Pos.Y, pth.minimumCenterY, pth.maximumCenterY), convertToFitPictureBox(height, (int)e.Pos.X, pth.minimumCenterX, pth.maximumCenterX));
                     Array.Copy(posCar, 1, posCar, 0, posCar.Length - 1);
                     ShowOutsimValues(e.Pos.X, e.Pos.Y);
 
-                };
-                outsim.Connect("127.0.0.1", 29966);
+                };*/
+                //outsim.Connect("127.0.0.1", 29966);
             }
             catch(SocketException ex)
             {
@@ -151,28 +157,24 @@ namespace LFS_CSharp
         }
 
         delegate void ShowOutsimValuesDelegate(double posX, double posY);
-        private void ShowOutsimValues(double posX, double posY)
+        public static void ShowOutsimValues(double posX, double posY)
         {
             try
             {
-                if (this.InvokeRequired)
+                if (_trackViewer.InvokeRequired)
                 {
-                    this.Invoke(new ShowOutsimValuesDelegate(ShowOutsimValues), new object[] { posX, posY});
+                    _trackViewer.Invoke(new ShowOutsimValuesDelegate(ShowOutsimValues), new object[] { posX, posY});
                 }
                 else
                 {
-                    updateCar();
+                    _trackViewer.posCar[_trackViewer.posCar.Length - 1] = new PointF(_trackViewer.convertToFitPictureBox(_trackViewer.width, (int)posY, _trackViewer.pth.minimumCenterY, _trackViewer.pth.maximumCenterY), _trackViewer.convertToFitPictureBox(_trackViewer.height, (int)posX, _trackViewer.pth.minimumCenterX, _trackViewer.pth.maximumCenterX));
+                    Array.Copy(_trackViewer.posCar, 1, _trackViewer.posCar, 0, _trackViewer.posCar.Length - 1);
+                    _trackViewer.updateCar();
                 }
             }
-            catch (ObjectDisposedException ex)
+            catch(Exception ex)
             {
-                if (outsimThread.IsAlive)
-                    outsimThread.Abort();
-            }
-            catch(InvalidAsynchronousStateException ex)
-            {
-                if (outsimThread.IsAlive)
-                    outsimThread.Abort();
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -186,15 +188,7 @@ namespace LFS_CSharp
 
         private void TrackViewer_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (outsimThread.IsAlive)
-            {
-                if (!outsim.IsConnected)
-                {
-                    outsim.Disconnect();
-                    outsim = null;
-                }
-                outsimThread.Abort();
-            }
+            
         }
     }
 }
