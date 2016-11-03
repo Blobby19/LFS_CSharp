@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using LFS_CSharp.track;
 namespace LFS_CSharp
 {
     public partial class TrackViewer : Form
@@ -51,7 +51,7 @@ namespace LFS_CSharp
 
         private void btn_open_track_Click(object sender, EventArgs e)
         {
-            TrackParser trackParser = new TrackParser("BL2");
+            TrackParser trackParser = new TrackParser("AS4");
             if((pth = trackParser.ParsePTHTrack()) != null)
             {
                 drawTrack(pth);

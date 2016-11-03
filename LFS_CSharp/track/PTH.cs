@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LFS_CSharp
+namespace LFS_CSharp.track
 {
     public class PTH
     {

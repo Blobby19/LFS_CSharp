@@ -78,11 +78,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cube.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="track\Cube.cs" />
     <Compile Include="JoyController.cs" />
     <Compile Include="OutgaugeThread.cs" />
-    <Compile Include="PTH_GL.cs" />
-    <Compile Include="PTH.cs" />
+    <Compile Include="track\PTH_GL.cs" />
+    <Compile Include="track\PTH.cs" />
     <Compile Include="LP.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -91,17 +92,18 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SMX_GL.cs" />
-    <Compile Include="TrackGL.cs" />
-    <Compile Include="TrackParserGL.cs" />
-    <Compile Include="TrackParser.cs" />
+    <Compile Include="track\SMX_GL.cs" />
+    <Compile Include="track\Track.cs" />
+    <Compile Include="track\TrackGL.cs" />
+    <Compile Include="track\TrackParserGL.cs" />
+    <Compile Include="track\TrackParser.cs" />
     <Compile Include="TrackViewer.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TrackViewer.Designer.cs">
       <DependentUpon>TrackViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Volume.cs" />
+    <Compile Include="track\Volume.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LFS_CSharp
+namespace LFS_CSharp.track
 {
     class TrackParserGL
     {
@@ -88,6 +88,7 @@ namespace LFS_CSharp
         public SMX_GL ParseSMXTrack()
         {
             FileStream reader = new FileStream("./resources/smx/"+this._trackName+"_3DH.smx", FileMode.Open, FileAccess.Read);
+            StreamWriter writer = new StreamWriter(@"C:\Users\Fedora\Documents\Developpement\LFS_track_converter\track_converter\" + this._trackName + "_3DH.obj");
             byte[] data;
 
             try
@@ -112,6 +113,7 @@ namespace LFS_CSharp
                     _smxTrack.empty2 = ReadBytes(bin, 9);
                     _smxTrack.numObjects = ReadInt(bin);
                     long offset = bin.BaseStream.Position;
+                    int offsetForTriangle = 0;
                     _smxTrack.smxObjectsList = new ObjectBlockSmx[_smxTrack.numObjects];
                     for(int i = 0; i < _smxTrack.numObjects; i++)
                     {
@@ -126,10 +128,11 @@ namespace LFS_CSharp
                         for(int j = 0; j < _smxObject.numPoints; j++)
                         {
                             PointBlockSmx _smxPoint = new PointBlockSmx();
-                            _smxPoint.point = new OpenTK.Vector3(ReadInt(bin, offset_1), ReadInt(bin, offset_1), ReadInt(bin, offset_1));
+                            _smxPoint.point = new OpenTK.Vector3((float)ReadInt(bin, offset_1)/65536, (float)ReadInt(bin, offset_1)/65536, (float)ReadInt(bin, offset_1)/65536);
                             _smxPoint.color = ReadInt(bin, offset_1);
                             offset_1 = bin.BaseStream.Position;
                             _smxObject.smxPointsList[j] = _smxPoint;
+                            writer.WriteLine("v " + _smxPoint.point.X + " " + _smxPoint.point.Y + " " + _smxPoint.point.Z);
                         }
                         for(int k = 0; k < _smxObject.numTriangles; k++)
                         {
@@ -140,9 +143,12 @@ namespace LFS_CSharp
                             _smxTriangle.empty = ReadWord(bin, offset_1);
                             offset_1 = bin.BaseStream.Position;
                             _smxObject.smxTrianglesList[k] = _smxTriangle;
+                            writer.WriteLine("f " + (_smxTriangle.vertexA+1+ offsetForTriangle) + " " + (_smxTriangle.vertexB+1+ offsetForTriangle) + " " + (_smxTriangle.vertexC+1+ offsetForTriangle));
                         }
+                        offsetForTriangle += _smxObject.numPoints;
                         _smxTrack.smxObjectsList[i] = _smxObject;
                     }
+                    writer.Close();
                     FooterBlockSmx _smxFooter = new FooterBlockSmx();
                     _smxFooter.numCpObjects = ReadInt(bin);
                     Console.WriteLine(_smxFooter.numCpObjects);
