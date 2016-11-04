@@ -31,7 +31,8 @@ namespace LFS_CSharp
         private PTH pth;
         private Pen penLimit;
         private Pen penRoad;
-        
+        private Pen penFinishLine;
+
         [STAThread]
         static void Main2(object state)
         {
@@ -67,6 +68,7 @@ namespace LFS_CSharp
 
             penLimit = new Pen(Color.Brown, 1.0f);
             penRoad = new Pen(Color.Orange, 1.0f);
+            penFinishLine = new Pen(Color.Black, 2.0f);
             PointF[] points = new PointF[track.GetNumNodes()];
             PointF[] pointsDir = new PointF[track.GetNumNodes()];
             PointF[] pointsRoadLeft = new PointF[track.GetNumNodes()];
@@ -85,17 +87,34 @@ namespace LFS_CSharp
 
             for(int i = 0; i < points.Length-1; i++)
             {
-                g.DrawLine(Pens.Green, pointsLimitLeft[i], pointsLimitLeft[i+1]);
+                // Draw Physic Limit of the track
+                g.DrawLine(Pens.Green, pointsLimitLeft[i], pointsLimitLeft[i + 1]);
                 if (i == points.Length - 2) g.DrawLine(Pens.Green, pointsLimitLeft[i + 1], pointsLimitLeft[0]);
-                g.DrawLine(Pens.Purple, pointsLimitRight[i], pointsLimitRight[i+1]);
+                g.DrawLine(Pens.Purple, pointsLimitRight[i], pointsLimitRight[i + 1]);
                 if (i == points.Length - 2) g.DrawLine(Pens.Purple, pointsLimitRight[i + 1], pointsLimitRight[0]);
                 g.DrawLine(penLimit, pointsLimitLeft[i], pointsLimitRight[i]);
                 if (i == points.Length - 2) g.DrawLine(penLimit, pointsLimitLeft[i + 1], pointsLimitRight[i + 1]);
-                g.DrawLine(penRoad, pointsRoadLeft[i], pointsRoadRight[i]);
-                if (i == points.Length - 2) g.DrawLine(penRoad, pointsRoadLeft[i + 1], pointsRoadRight[i+1]);
-                g.DrawLine(Pens.Red, points[i], points[i+1]);
-                if (i == points.Length - 2) g.DrawLine(Pens.Red, points[i + 1], points[0]);
-                //g.DrawLine(Pens.Green, points[i - 1].X, points[i - 1].Y, points[i - 1].X + pointsDir[i - 1].X * 20, points[i - 1].Y + pointsDir[i - 1].Y * 20);
+
+                g.DrawLine(Pens.Green, points[i].X, points[i].Y, points[i].X + pointsDir[i].X, points[i].Y + pointsDir[i].Y);
+                Console.WriteLine("Longueur du vecteur tangantiel");
+                Console.WriteLine(Math.Sqrt(Math.Pow(pointsDir[i].X - points[i].X, 2) + Math.Pow(pointsDir[i].Y - points[i].Y, 2)));
+
+                if (i != track.GetFinishLine())
+                {
+                    //Draw Limit of the track
+                    g.DrawLine(penRoad, pointsRoadLeft[i], pointsRoadRight[i]);
+                    if (i == points.Length - 2) g.DrawLine(penRoad, pointsRoadLeft[i + 1], pointsRoadRight[i + 1]);
+                    g.DrawLine(Pens.Red, points[i], points[i + 1]);
+                    if (i == points.Length - 2) g.DrawLine(Pens.Red, points[i + 1], points[0]);
+                }
+                else
+                {
+                    //Draw Limit of the track
+                    g.DrawLine(penFinishLine, pointsRoadLeft[i], pointsRoadRight[i]);
+                    if (i == points.Length - 2) g.DrawLine(penRoad, pointsRoadLeft[i + 1], pointsRoadRight[i + 1]);
+                    g.DrawLine(penFinishLine, points[i], points[i + 1]);
+                    if (i == points.Length - 2) g.DrawLine(Pens.Red, points[i + 1], points[0]);
+                }
             }
             this._outsimThread = new OutSimThread();
             this._outsimThread.Start();
@@ -124,7 +143,7 @@ namespace LFS_CSharp
         {
             int offset = -minimum;
             float retour = ((float)(taille-100)/(((float)maximum + (float)offset) - ((float)minimum + (float)offset)))* ((float)point+(float)offset);
-            Console.WriteLine(retour);
+            //Console.WriteLine(retour);
             return retour;
         }
 
