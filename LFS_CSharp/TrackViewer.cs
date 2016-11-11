@@ -99,7 +99,19 @@ namespace LFS_CSharp
                 Console.WriteLine("Longueur du vecteur tangantiel");
                 Console.WriteLine(Math.Sqrt(Math.Pow(pointsDir[i].X - points[i].X, 2) + Math.Pow(pointsDir[i].Y - points[i].Y, 2)));
 
-                if (i != track.GetFinishLine())
+                VectorUtils.Equation med_a = VectorUtils.computeMediatrice(points[i], points[i + 1]);
+                PointF vecDir = new PointF(points[i].X + pointsDir[i].X, points[i].Y + pointsDir[i].Y);
+                PointF vecDir_ = new PointF(points[i+1].X + pointsDir[i+1].X, points[i+1].Y + pointsDir[i+1].Y);
+                VectorUtils.Equation med_b = VectorUtils.computeMediatrice(vecDir, vecDir_);
+
+                PointF intersection = VectorUtils.computeIntersection(med_a, med_b);
+                double radius = VectorUtils.computeDistance(intersection, points[i]);
+                double radians = VectorUtils.computeAngularDisplacement(radius, points[i], points[i + 1]);
+                double degrees = VectorUtils.radiansToDegrees(radians);
+                Console.WriteLine("Point: {0} - x: {1} y: {2}, PointDir: x: {3} y: {4}, Degrés: {5}", i, points[i].X, points[i].Y, points[i].X + pointsDir[i].X, points[i].Y + pointsDir[i].Y, degrees);
+
+
+                if (i != track.GetFinishLine() && degrees <= 4.5f)
                 {
                     //Draw Limit of the track
                     g.DrawLine(penRoad, pointsRoadLeft[i], pointsRoadRight[i]);

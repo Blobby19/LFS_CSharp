@@ -109,6 +109,7 @@
       <DependentUpon>TrackViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="track\Volume.cs" />
+    <Compile Include="VectorUtils.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
