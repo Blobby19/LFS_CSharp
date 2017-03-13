@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LFS_CSharp
+namespace LFS_CSharp.Outsim
 {
     class OutSimThread
     {

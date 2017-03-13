@@ -2,11 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
-namespace LFS_CSharp
+namespace LFS_CSharp.Outgauge
 {
     class OutgaugeThread
     {

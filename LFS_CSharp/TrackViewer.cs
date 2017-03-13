@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LFS_CSharp.track;
+using LFS_CSharp.Outsim;
+
 namespace LFS_CSharp
 {
     public partial class TrackViewer : Form
@@ -55,11 +57,13 @@ namespace LFS_CSharp
 
         private void btn_open_track_Click(object sender, EventArgs e)
         {
-            TrackParser trackParser = new TrackParser("AS4");
+            TrackParserGL trackParser = new TrackParserGL("BL1");
+            trackParser.ParseSMXTrack();
+            /*TrackParser trackParser = new TrackParser("AS4");
             if((pth = trackParser.ParsePTHTrack()) != null)
             {
                 drawTrack(pth);
-            }
+            }*/
 
         }
 
@@ -96,8 +100,8 @@ namespace LFS_CSharp
                 if (i == points.Length - 2) g.DrawLine(penLimit, pointsLimitLeft[i + 1], pointsLimitRight[i + 1]);
 
                 g.DrawLine(Pens.Green, points[i].X, points[i].Y, points[i].X + pointsDir[i].X, points[i].Y + pointsDir[i].Y);
-                Console.WriteLine("Longueur du vecteur tangantiel");
-                Console.WriteLine(Math.Sqrt(Math.Pow(pointsDir[i].X - points[i].X, 2) + Math.Pow(pointsDir[i].Y - points[i].Y, 2)));
+                //Console.WriteLine("Longueur du vecteur tangantiel");
+                //Console.WriteLine(Math.Sqrt(Math.Pow(pointsDir[i].X - points[i].X, 2) + Math.Pow(pointsDir[i].Y - points[i].Y, 2)));
 
                 VectorUtils.Equation med_a = VectorUtils.computeMediatrice(points[i], points[i + 1]);
                 PointF vecDir = new PointF(points[i].X + pointsDir[i].X, points[i].Y + pointsDir[i].Y);
@@ -108,7 +112,7 @@ namespace LFS_CSharp
                 double radius = VectorUtils.computeDistance(intersection, points[i]);
                 double radians = VectorUtils.computeAngularDisplacement(radius, points[i], points[i + 1]);
                 double degrees = VectorUtils.radiansToDegrees(radians);
-                Console.WriteLine("Point: {0} - x: {1} y: {2}, PointDir: x: {3} y: {4}, Degrés: {5}", i, points[i].X, points[i].Y, points[i].X + pointsDir[i].X, points[i].Y + pointsDir[i].Y, degrees);
+                //Console.WriteLine("Point: {0} - x: {1} y: {2}, PointDir: x: {3} y: {4}, Degrés: {5}", i, points[i].X, points[i].Y, points[i].X + pointsDir[i].X, points[i].Y + pointsDir[i].Y, degrees);
 
 
                 if (i != track.GetFinishLine() && degrees <= 4.5f)
@@ -131,8 +135,6 @@ namespace LFS_CSharp
             this._outsimThread = new OutSimThread();
             this._outsimThread.Start();
             trackViewerReceiver = new TrackViewerReceiver(this._outsimThread);
-            //this.outsimThread = new Thread(new ThreadStart(CallOutsimThread));
-            //this.outsimThread.Start();
         }
         
         private PointF computeDriveLeftPoint(PointF center, float limitLeft, PointF dir)

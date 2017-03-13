@@ -12,6 +12,7 @@ using System.Threading;
 using System.Windows.Forms;
 using vJoyInterfaceWrap;
 using LFS_CSharp.track;
+using LFS_CSharp.Outgauge;
 
 namespace LFS_CSharp
 {
@@ -27,7 +28,6 @@ namespace LFS_CSharp
         private static Form1 _form;
         public InSimInterface InSim;
         private double[,] ValsArray = new double[4, 250];
-        public static Mutex mutexOutgauge;
 
         private LP lp;
 
@@ -40,22 +40,18 @@ namespace LFS_CSharp
         static void Main()
         {
             _form = new Form1();
-            joyController = JoyController.Create();
             Application.EnableVisualStyles();
             Application.Run(_form);
         }
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
-            if (Form1.mutexOutgauge == null)
-                Form1.mutexOutgauge = new Mutex();
-            //if (this.outgaugeThread == null)
             if (_outgaugeThread == null)
             {
                 this._outgaugeThread = new OutgaugeThread();
                 this._outgaugeThread.Start();
-                formReceiver = new Form1Receiver(this._outgaugeThread);
             }
+            formReceiver = new Form1Receiver(this._outgaugeThread);
         }
         
 
@@ -179,7 +175,8 @@ namespace LFS_CSharp
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
         {
-            lp.setpoint = (double)num_accel_consigne.Value;
+            joyController.setConsigne((double)num_accel_consigne.Value);
+            joyController.refresh();
         }
 
         private void btn_track_viewer_Click(object sender, EventArgs e)
@@ -187,6 +184,16 @@ namespace LFS_CSharp
             TrackViewer trackViewer = TrackViewer.Create();
             //TrackGL gl = new TrackGL(512, 512);
             //gl.Run();
+        }
+
+        private void btn_openVJoyControl_Click(object sender, EventArgs e)
+        {
+            if (this._outgaugeThread == null)
+            {
+                this._outgaugeThread = new OutgaugeThread();
+                this._outgaugeThread.Start();
+            }
+            joyController = new JoyController(this._outgaugeThread);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LFS_CSharp.Outgauge;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,13 +10,16 @@ using vJoyInterfaceWrap;
 
 namespace LFS_CSharp
 {
-    class JoyController
+    class JoyController : OutGaugeObserver
     {
 
         public Thread _joyThread;
+        public Thread _update;
+        private Mutex _mutex;
         private bool _abort = false;
         private vJoy joystick;
         private vJoy.JoystickState iReport;
+        private OutgaugeThread outgaugeThread;
         private LP lp;
         private uint id;
         private double throttle;
@@ -24,11 +28,13 @@ namespace LFS_CSharp
         private double clutch;
         private double speed;
 
-        public static JoyController Create()
+        public JoyController (OutgaugeThread outgaugeThread)
         {
-            JoyController vJoy = new JoyController();
-            return vJoy;
+            this.outgaugeThread = outgaugeThread;
+            outgaugeThread.attach(this);
+            initializeJoystick();
         }
+
         public JoyController()
         {
             try
@@ -40,13 +46,13 @@ namespace LFS_CSharp
                 Trace.WriteLine(ex.Message);
             }
             _joyThread = new Thread(new ThreadStart(MainThread));
+            _update = new Thread(new ThreadStart(update));
         }
 
         private void initializeJoystick()
         {
             joystick = new vJoy();
             iReport = new vJoy.JoystickState();
-            if (Form1.mutexOutgauge == null) Form1.mutexOutgauge = new Mutex();
             lp = new LP(10, 5, 5);
             lp.computeConstants();
             id = 1;
@@ -116,62 +122,6 @@ namespace LFS_CSharp
                 Console.WriteLine("Acquired: vJoy device number {0}.\n", id);
         }
 
-        public static void retrieveValues(double RPM,
-            double Throttle,
-            double Brakes,
-            double Clutch,
-            double Speed,
-            TimeSpan Time)
-        {
-            //this.throttle = Throttle;
-            //this.brakes = Brakes;
-        }
-
-        public void Start()
-        {
-            if (_abort) _abort = false;
-            try
-            {
-                if (!_joyThread.IsAlive)
-                    _joyThread.Start();
-            }
-            catch(ThreadStartException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-            catch(OutOfMemoryException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-            Console.WriteLine("JoyThread started!");
-        }
-
-        public void Abort()
-        {
-            if (!_abort) _abort = true;
-            try
-            {
-                _joyThread.Abort();
-                _joyThread.Join();
-            }
-            catch(ThreadAbortException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-            catch(ThreadStartException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-            catch(ThreadInterruptedException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-            catch(System.Security.SecurityException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-        }
-
         private void MainThread()
         {
             int X, Y, Z, ZR, XR;
@@ -189,27 +139,34 @@ namespace LFS_CSharp
             bool res;
             // Reset this device to def
             joystick.ResetVJD(id);
-            while (!_abort)
-            {
-                Form1.mutexOutgauge.WaitOne();
-                lp.setpoint = 30;
-                //lp.setpoint = (double);
+            
+            lp.setpoint = 30;
+            lp.direct = false;
+
+            lp.execute();
+            // Set position of 4 axes
+            res = joystick.SetAxis((int)adapteAxis(lp._out, maxval), id, HID_USAGES.HID_USAGE_X);
                 
-                lp.direct = false;
-                //this.mutex.WaitOne();
-                lp.execute();
-                // Set position of 4 axes
-                res = joystick.SetAxis((int)adapteAxis(lp._out, maxval), id, HID_USAGES.HID_USAGE_X);
-                //this.mutex.ReleaseMutex();
+            X += 150; if (X > maxval) X = 0;
+            count++;
 
-                System.Threading.Thread.Sleep(20);
-                X += 150; if (X > maxval) X = 0;
-                count++;
+            if (count > 640)
+                count = 0;
+        }
 
-                if (count > 640)
-                    count = 0;
-                Form1.mutexOutgauge.ReleaseMutex();
-            }
+        public void setKp(double kp)
+        {
+            lp.kp = kp;
+        }
+
+        public void setConsigne(double consigne)
+        {
+            lp.setpoint = consigne;
+        }
+
+        public void refresh()
+        {
+            lp.computeConstants();
         }
 
         private double adapteAxis(double rawValue, long maxval)
@@ -217,5 +174,12 @@ namespace LFS_CSharp
             return (((maxval - maxval / 2) / 100) * rawValue) + maxval / 2;
         }
 
+        public override void update()
+        {
+            this.throttle = outgaugeThread.getThrottle();
+            this.speed = outgaugeThread.getSpeed();
+            lp.vitesse = this.speed;
+            MainThread();
+        }
     }
 }

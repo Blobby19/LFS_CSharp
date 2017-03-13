@@ -80,13 +80,13 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Form1Receiver.cs" />
-    <Compile Include="OutGaugeObserver.cs" />
-    <Compile Include="OutSimObserver.cs" />
-    <Compile Include="OutSimThread.cs" />
+    <Compile Include="Outgauge\OutGaugeObserver.cs" />
+    <Compile Include="Outsim\OutSimObserver.cs" />
+    <Compile Include="Outsim\OutSimThread.cs" />
     <Compile Include="TrackViewerReceiver.cs" />
     <Compile Include="track\Cube.cs" />
-    <Compile Include="JoyController.cs" />
-    <Compile Include="OutgaugeThread.cs" />
+    <Compile Include="control\JoyController.cs" />
+    <Compile Include="Outgauge\OutgaugeThread.cs" />
     <Compile Include="track\PTH_GL.cs" />
     <Compile Include="track\PTH.cs" />
     <Compile Include="LP.cs" />
