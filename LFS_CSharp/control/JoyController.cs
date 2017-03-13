@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LFS_CSharp.Outgauge;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace LFS_CSharp
         private bool _abort = false;
         private vJoy joystick;
         private vJoy.JoystickState iReport;
+        private OutgaugeThread outgaugeThread;
         private LP lp;
         private uint id;
         private double throttle;
@@ -23,7 +25,7 @@ namespace LFS_CSharp
         private double brakes;
         private double clutch;
         private double speed;
-
+        
         /*public static JoyController Create(OutgaugeThread _outgaugeThread)
         {
             JoyController.vJoy = new JoyController(_outgaugeThread);
@@ -48,7 +50,6 @@ namespace LFS_CSharp
         {
             joystick = new vJoy();
             iReport = new vJoy.JoystickState();
-            if (Form1.mutexOutgauge == null) Form1.mutexOutgauge = new Mutex();
             lp = new LP(10, 5, 5);
             lp.computeConstants();
             id = 1;
@@ -170,11 +171,13 @@ namespace LFS_CSharp
             bool res;
             // Reset this device to def
             joystick.ResetVJD(id);
-            while (!_abort)
-            {
-                Form1.mutexOutgauge.WaitOne();
-                lp.setpoint = 30;
-                //lp.setpoint = (double);
+            
+            lp.setpoint = 30;
+            lp.direct = false;
+
+            lp.execute();
+            // Set position of 4 axes
+            res = joystick.SetAxis((int)adapteAxis(lp._out, maxval), id, HID_USAGES.HID_USAGE_X);
                 
                 lp.direct = false;
                 //this.mutex.WaitOne();

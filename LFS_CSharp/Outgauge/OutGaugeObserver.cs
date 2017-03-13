@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LFS_CSharp
+namespace LFS_CSharp.Outgauge
 {
-    abstract class OutSimObserver
+    abstract class OutGaugeObserver
     {
-        protected OutSimThread outsimThread;
+        protected OutgaugeThread outgaugeThread;
         public abstract void update();
     }
 }

@@ -125,7 +125,8 @@ namespace LFS_CSharp.track
                         _smxObject.numTriangles = ReadInt(bin, offset);
                         _smxObject.smxTrianglesList = new TriangleBlockSmx[_smxObject.numTriangles];
                         long offset_1 = bin.BaseStream.Position;
-                        for(int j = 0; j < _smxObject.numPoints; j++)
+                        writer.WriteLine("g object"+i);
+                        for (int j = 0; j < _smxObject.numPoints; j++)
                         {
                             PointBlockSmx _smxPoint = new PointBlockSmx();
                             _smxPoint.point = new OpenTK.Vector3((float)ReadInt(bin, offset_1)/65536, (float)ReadInt(bin, offset_1)/65536, (float)ReadInt(bin, offset_1)/65536);

@@ -72,7 +72,7 @@ namespace LFS_CSharp.track
             Title = "LFS Viewer";
             Console.WriteLine("OnLoad");
             initProgram();
-            cam.Position = new Vector3(850.0f, -480.0f, 1.0f);
+            cam.Position = new Vector3(.0f, .0f, .0f);
             GL.ClearColor(Color.Black);
             GL.PointSize(5f);
         }
@@ -159,10 +159,12 @@ namespace LFS_CSharp.track
             track.Scale = new Vector3(0.1f, 0.1f, 0.1f);
 
             track.CalculateModelMatrix();
-            track.ViewProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(1.3f, ClientSize.Width / (float)ClientSize.Height, 1.0f, 40.0f);
+            track.ViewProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(1.3f, ClientSize.Width / (float)ClientSize.Height, 1.0f, 1000.0f);
             track.ModelViewProjectionMatrix = track.ModelMatrix * track.ViewProjectionMatrix;
 
             GL.UseProgram(pgmId);
+
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 

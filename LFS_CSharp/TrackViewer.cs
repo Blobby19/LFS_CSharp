@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LFS_CSharp.track;
+using LFS_CSharp.Outsim;
+
 namespace LFS_CSharp
 {
     public partial class TrackViewer : Form
@@ -56,7 +58,7 @@ namespace LFS_CSharp
         private void btn_open_track_Click(object sender, EventArgs e)
         {
             TrackParser trackParser = new TrackParser("BL1");
-            if((pth = trackParser.ParsePTHTrack()) != null)
+            if ((pth = trackParser.ParsePTHTrack()) != null)
             {
                 drawTrack(pth);
             }
@@ -131,8 +133,6 @@ namespace LFS_CSharp
             this._outsimThread = new OutSimThread();
             this._outsimThread.Start();
             trackViewerReceiver = new TrackViewerReceiver(this._outsimThread);
-            //this.outsimThread = new Thread(new ThreadStart(CallOutsimThread));
-            //this.outsimThread.Start();
         }
         
         private PointF computeDriveLeftPoint(PointF center, float limitLeft, PointF dir)
