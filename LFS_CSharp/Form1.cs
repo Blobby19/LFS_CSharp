@@ -40,7 +40,6 @@ namespace LFS_CSharp
         static void Main()
         {
             _form = new Form1();
-            joyController = JoyController.Create();
             Application.EnableVisualStyles();
             Application.Run(_form);
         }
@@ -54,6 +53,7 @@ namespace LFS_CSharp
             {
                 this._outgaugeThread = new OutgaugeThread();
                 this._outgaugeThread.Start();
+                joyController = new JoyController(_form._outgaugeThread);
                 formReceiver = new Form1Receiver(this._outgaugeThread);
             }
         }
@@ -92,7 +92,6 @@ namespace LFS_CSharp
                         _form.lbl_RPM.Text = (Math.Truncate(RPM * 100) / 100).ToString();
                         _form.lbl_speed.Text = (Math.Truncate(Speed * 10) / 10).ToString();
                         _form.lbl_time.Text = Time.ToString();
-                        //joyController.retrieveValues(RPM, Throttle, Brakes, Clutch, Speed, Time);
                     }
                 }
             }
@@ -187,6 +186,11 @@ namespace LFS_CSharp
             TrackViewer trackViewer = TrackViewer.Create();
             //TrackGL gl = new TrackGL(512, 512);
             //gl.Run();
+        }
+
+        private void btn_openVJoyControl_Click(object sender, EventArgs e)
+        {
+            joyController.Start();
         }
     }
 }

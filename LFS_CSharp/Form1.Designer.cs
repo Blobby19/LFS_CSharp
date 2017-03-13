@@ -178,6 +178,7 @@
             this.btn_openVJoyControl.TabIndex = 9;
             this.btn_openVJoyControl.Text = "Open vJoy";
             this.btn_openVJoyControl.UseVisualStyleBackColor = true;
+            this.btn_openVJoyControl.Click += new System.EventHandler(this.btn_openVJoyControl_Click);
             // 
             // speed_chart
             // 

@@ -9,10 +9,10 @@ using vJoyInterfaceWrap;
 
 namespace LFS_CSharp
 {
-    class JoyController
+    class JoyController : OutGaugeObserver
     {
 
-        public Thread _joyThread;
+        //public Thread _joyThread;
         private bool _abort = false;
         private vJoy joystick;
         private vJoy.JoystickState iReport;
@@ -24,22 +24,24 @@ namespace LFS_CSharp
         private double clutch;
         private double speed;
 
-        public static JoyController Create()
+        /*public static JoyController Create(OutgaugeThread _outgaugeThread)
         {
-            JoyController vJoy = new JoyController();
-            return vJoy;
-        }
-        public JoyController()
+            JoyController.vJoy = new JoyController(_outgaugeThread);
+            return JoyController.vJoy;
+        }*/
+        public JoyController(OutgaugeThread _outgaugeThread)
         {
             try
             {
+                this.outgaugeThread = _outgaugeThread;
+                Console.WriteLine("Joystick Ready!");
                 initializeJoystick();
             }
             catch(Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
-            _joyThread = new Thread(new ThreadStart(MainThread));
+            //_joyThread = new Thread(new ThreadStart(MainThread));
         }
 
         private void initializeJoystick()
@@ -87,6 +89,7 @@ namespace LFS_CSharp
             bool AxisX = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_X);
             bool AxisY = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_Y);
             bool AxisZ = joystick.GetVJDAxisExist(id, HID_USAGES.HID_USAGE_Z);
+
             int nButtons = joystick.GetVJDButtonNumber(id);
             int ContPovNumber = joystick.GetVJDContPovNumber(id);
             int DiscPovNumber = joystick.GetVJDDiscPovNumber(id);
@@ -116,33 +119,11 @@ namespace LFS_CSharp
                 Console.WriteLine("Acquired: vJoy device number {0}.\n", id);
         }
 
-        public static void retrieveValues(double RPM,
-            double Throttle,
-            double Brakes,
-            double Clutch,
-            double Speed,
-            TimeSpan Time)
-        {
-            //this.throttle = Throttle;
-            //this.brakes = Brakes;
-        }
-
         public void Start()
         {
             if (_abort) _abort = false;
-            try
-            {
-                if (!_joyThread.IsAlive)
-                    _joyThread.Start();
-            }
-            catch(ThreadStartException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-            catch(OutOfMemoryException ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
+           
+            this.outgaugeThread.attach(this);
             Console.WriteLine("JoyThread started!");
         }
 
@@ -151,8 +132,8 @@ namespace LFS_CSharp
             if (!_abort) _abort = true;
             try
             {
-                _joyThread.Abort();
-                _joyThread.Join();
+                //_joyThread.Abort();
+                //_joyThread.Join();
             }
             catch(ThreadAbortException ex)
             {
@@ -174,7 +155,7 @@ namespace LFS_CSharp
 
         private void MainThread()
         {
-            int X, Y, Z, ZR, XR;
+            /*int X, Y, Z, ZR, XR;
             uint count = 0;
             long maxval = 0;
 
@@ -209,7 +190,7 @@ namespace LFS_CSharp
                 if (count > 640)
                     count = 0;
                 Form1.mutexOutgauge.ReleaseMutex();
-            }
+            }*/
         }
 
         private double adapteAxis(double rawValue, long maxval)
@@ -217,5 +198,43 @@ namespace LFS_CSharp
             return (((maxval - maxval / 2) / 100) * rawValue) + maxval / 2;
         }
 
+        public override void update()
+        {
+
+            int X, Y, Z, ZR, XR;
+            uint count = 0;
+            long maxval = 0;
+
+            X = 20;
+            Y = 30;
+            Z = 40;
+            XR = 60;
+            ZR = 80;
+
+            joystick.GetVJDAxisMax(id, HID_USAGES.HID_USAGE_X, ref maxval);
+
+            bool res;
+            // Reset this device to def
+            joystick.ResetVJD(id);
+
+            lp.vitesse = this.outgaugeThread.getSpeed();
+            Console.WriteLine(lp._out);
+            lp.setpoint = 30;
+            //lp.setpoint = (double);
+
+            lp.direct = false;
+            //this.mutex.WaitOne();
+            lp.execute();
+            Console.WriteLine(lp._out);
+            // Set position of 4 axes
+            res = joystick.SetAxis((int)adapteAxis(lp._out, maxval), id, HID_USAGES.HID_USAGE_X);
+            //this.mutex.ReleaseMutex();
+
+            X += 150; if (X > maxval) X = 0;
+            count++;
+
+            if (count > 640)
+                count = 0;
+        }
     }
 }
